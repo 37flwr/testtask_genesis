@@ -1,0 +1,26 @@
+.three-col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-row-gap: 20px;
+  grid-column-gap: 40px;
+}
+
+.page-layout {
+  width: 90%;
+  margin-left: 5%;
+}
+
+.full-page {
+  height: calc(100vh - 40px);
+}
+
+.content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,62 @@
+.course {
+  display: flex;
+  flex-direction: column;
+
+  &-lessons {
+    display: flex;
+    gap: 25px;
+    width: 100%;
+
+    &-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}
+
+.lesson {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+  cursor: pointer;
+  border-radius: 10px;
+
+  &-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    border-radius: 10px;
+    padding: 10px;
+
+    &-title {
+      all: unset;
+      font-size: 20px;
+    }
+
+    &-duration {
+      all: unset;
+      font-size: 18px;
+      color: #777;
+    }
+  }
+
+  &-locked {
+    opacity: 0.2;
+    cursor: not-allowed;
+
+    &-img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 20px;
+    }
+  }
+
+  &-active {
+    background-color: rgb(192, 213, 236);
+  }
+}

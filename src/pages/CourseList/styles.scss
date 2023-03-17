@@ -1,0 +1,25 @@
+.course-card-details {
+  display: flex;
+  flex-direction: column;
+  row-gap: 7px;
+}
+
+.no-preview {
+  height: 250px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &-content {
+    height: 65%;
+    width: auto;
+    margin-bottom: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgb(226, 226, 226);
+  }
+}
