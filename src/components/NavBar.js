@@ -1,16 +1,19 @@
 import React from "react";
 import Nav from "react-bootstrap/Nav";
+import { Link } from "react-router-dom";
 
 const NavBar = () => {
   return (
     <Nav
       variant="pills"
-      defaultActiveKey="/home"
+      defaultActiveKey="/courses"
       className="flex gap-20 justify-content-center"
     >
       <Nav.Item>
-        <Nav.Link href="/courses" eventKey="/courses">
-          Courses
+        <Nav.Link eventKey="/courses">
+          <Link style={{ color: "white" }} to="/courses?page=1">
+            Courses
+          </Link>
         </Nav.Link>
       </Nav.Item>
       <Nav.Item>

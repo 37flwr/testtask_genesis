@@ -1,11 +1,11 @@
 import { all, fork } from "redux-saga/effects";
 
 // Sagas
-import { progressSaga } from "../ducks/progress";
+import { coursesSaga } from "../ducks/courses";
 
 export default function* rootSaga() {
   yield all([
-    //progress
-    fork(progressSaga),
+    //courses
+    fork(coursesSaga),
   ]);
 }

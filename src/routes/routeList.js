@@ -12,7 +12,7 @@ const routeList = [
     path: "courses/:id",
     element: <Course />,
   },
-  { path: "*", element: <Navigate to="/courses" /> },
+  { path: "*", element: <Navigate to="/courses?page=1" /> },
 ];
 
 const AppRoutes = () => {

@@ -12,6 +12,7 @@ import ErrorFallback from "./components/fallbacks/ErrorFallback";
 import Loading from "./components/fallbacks/Loading";
 
 import { fetcher } from "./utils/fetcher";
+import ContextProviders from "./context";
 
 function App() {
   return (
@@ -33,7 +34,9 @@ function App() {
               )}
             >
               <Suspense fallback={<Loading />}>
+                {/* <ContextProviders> */}
                 <AppRoutes />
+                {/* </ContextProviders> */}
               </Suspense>
             </ErrorBoundary>
           </BrowserRouter>

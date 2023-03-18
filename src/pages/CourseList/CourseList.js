@@ -1,4 +1,6 @@
+import { useSearchParams } from "react-router-dom";
 import useSwr from "swr";
+import BasicPagination from "../../components/Pagination";
 
 import CourseCard from "./CourseCard";
 
@@ -11,12 +13,38 @@ const CourseList = () => {
     params: [["token", token.token]],
   }));
 
+  let [searchParams, setSearchParams] = useSearchParams();
+  const coursesPerPage = 10;
+  let currentPage = searchParams.get("page");
+  if (!currentPage) {
+    currentPage = 1;
+  }
+
+  const idxOfLastCourse = currentPage * coursesPerPage;
+  const idxOfFirstCourse = idxOfLastCourse - coursesPerPage;
+  const currentCourses = courses?.courses.slice(
+    idxOfFirstCourse,
+    idxOfLastCourse
+  );
+
+  const paginate = (number) => {
+    setSearchParams(`page=${number}`);
+  };
+
   return (
-    <section className="three-col-grid">
-      {courses?.courses.map((course) => (
-        <CourseCard key={course.id} data={course} />
-      ))}
-    </section>
+    <div className="courses-page">
+      <section className="three-col-grid">
+        {currentCourses?.map((course) => (
+          <CourseCard key={course.id} data={course} />
+        ))}
+      </section>
+      <BasicPagination
+        elementsPerPage={coursesPerPage}
+        totalElements={courses.courses.length}
+        paginate={paginate}
+        active={currentPage}
+      />
+    </div>
   );
 };
 

@@ -1,44 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import ReactHlsPlayer from "react-hls-player";
-import axios from "axios";
-import useSwr from "swr";
-import NotFoundImage from "../../assets/not-found-img.png";
+import StarRatings from "react-star-ratings";
+import Hls from "hls.js";
 
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Badge from "react-bootstrap/Badge";
-import StarRatings from "react-star-ratings";
+import ImageNotFound from "../../assets/not-found-img.png";
 import "./styles.scss";
 
 const CourseCard = ({ data }) => {
   const { id, description, meta, title, lessonsCount, tags, rating } = data;
   const navigate = useNavigate();
-
+  const videoRef = useRef();
   const [isHovering, setIsHovering] = useState(false);
-  const [activeVideoLink, setActiveVideoLink] = useState(false);
-  const [activeImgLink, setActiveImgLink] = useState(false);
-
-  const { data: token } = useSwr({
-    url: "https://api.wisey.app/api/v1/auth/anonymous?platform=subscriptions",
-  });
-
-  useEffect(() => {
-    axios
-      .get(meta?.courseVideoPreview?.link)
-      .then(() => setActiveVideoLink(true));
-    // if (meta?.courseVideoPreview?.previewImageLink) {
-    //   axios
-    //     .get(meta?.courseVideoPreview?.previewImageLink + "/cover.webp", {
-    //       params: { token },
-    //     })
-    //     .then((res) => {
-    //       console.log(res);
-    //       setActiveImgLink(true);
-    //     })
-    //     .catch((err) => console.log(err));
-    // }
-  }, [token]);
 
   const handleMouseOver = () => {
     setIsHovering(true);
@@ -48,6 +23,12 @@ const CourseCard = ({ data }) => {
     setIsHovering(false);
   };
 
+  if (Hls.isSupported() && meta.courseVideoPreview) {
+    var hls = new Hls();
+    hls.loadSource(meta.courseVideoPreview.link);
+    hls.attachMedia(videoRef.current);
+  }
+
   return (
     <Card
       className="fs-grid-elem"
@@ -55,34 +36,36 @@ const CourseCard = ({ data }) => {
       onMouseLeave={() => handleMouseOut((currState) => !currState)}
     >
       {isHovering ? (
-        <>
-          {activeVideoLink ? (
-            <ReactHlsPlayer
-              src={meta?.courseVideoPreview?.link}
-              autoPlay={true}
-              controls={false}
-              width="100%"
-              height="250px"
-              muted={true}
-            />
-          ) : (
-            <div className="no-preview">
-              <p className="no-preview-content">No preview available</p>
-            </div>
-          )}
-        </>
-      ) : (
-        <Card.Img
+        <video
+          autoPlay
+          controls={false}
+          ref={videoRef}
           style={{ height: "250px" }}
-          src={meta.courseVideoPreview?.previewImageLink + "/cover.webp"}
+          muted
+        ></video>
+      ) : meta.courseVideoPreview?.previewImageLink ? (
+        <picture>
+          <source
+            srcSet={
+              meta.courseVideoPreview?.previewImageLink?.replace(
+                "preview",
+                ""
+              ) + "cover.webp"
+            }
+            type="image/webp"
+          />
+          <img
+            style={{ height: "250px", width: "100%" }}
+            src={ImageNotFound}
+            alt=""
+          />
+        </picture>
+      ) : (
+        <img
+          style={{ height: "250px", width: "100%" }}
+          src={ImageNotFound}
+          alt=""
         />
-        // <>
-        //   {activeImgLink ? (
-
-        //   ) : (
-        //     <img src={NotFoundImage} style={{ height: "250px" }} alt="" />
-        //   )}
-        // </>
       )}
       <Card.Body className="d-grid gap-2">
         <Card.Title>{title}</Card.Title>
@@ -107,7 +90,7 @@ const CourseCard = ({ data }) => {
           </div>
           <div className="three-col-grid">
             {tags.map((tag) => (
-              <Badge bg="light" text="dark">
+              <Badge bg="light" text="dark" key={tag}>
                 {tag}
               </Badge>
             ))}

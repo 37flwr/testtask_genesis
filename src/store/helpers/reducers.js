@@ -1,6 +1,6 @@
 // Reducers
-import Progress from "../ducks/progress";
+import Courses from "../ducks/courses";
 
-const reducers = { Progress };
+const reducers = { Courses };
 
 export default reducers;
