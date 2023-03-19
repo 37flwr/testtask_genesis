@@ -1,0 +1,19 @@
+.error-fallback {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__text {
+    font-size: 15px;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 20px;
+
+    &__link {
+      text-decoration: none;
+    }
+  }
+}

@@ -1,12 +1,10 @@
 import React from "react";
-import CourseList from "./CourseList";
+import CoursesList from "./CoursesList";
 
-const Courses = () => {
-  return (
-    <div className="page-layout">
-      <CourseList />
-    </div>
-  );
-};
+const Courses = () => (
+  <div className="page-layout courses-page">
+    <CoursesList />
+  </div>
+);
 
 export default Courses;

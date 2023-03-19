@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: 20px;
 
-  &-lessons {
+  &__lessons {
     display: flex;
     gap: 25px;
     width: 100%;
@@ -15,7 +15,7 @@
       flex-direction: column;
     }
 
-    &-video {
+    &__video {
       height: auto;
       width: 70%;
       position: relative;
@@ -24,18 +24,34 @@
         width: 100%;
       }
 
-      &-btn {
+      &__btn {
         position: absolute;
         top: 5px;
         right: 5px;
         z-index: 2;
       }
-      &-elem {
+
+      &__elem {
         width: 100%;
+      }
+
+      &--not-found {
+        background-color: #444;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 30vh;
+        max-height: 70vh;
+        width: 70%;
+
+        @media (max-width: 1024px) {
+          width: 100%;
+        }
       }
     }
 
-    &-list {
+    &__list {
       display: flex;
       flex-direction: column;
       min-height: 30vh;
@@ -65,39 +81,40 @@
   position: relative;
   display: flex;
   flex-direction: column;
-
+  align-items: center;
   cursor: pointer;
   border-radius: 10px;
 
-  &-details {
+  &__details {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
     border-radius: 10px;
     padding: 10px;
+    width: 100%;
 
-    &-img {
+    &__img {
       height: 40px;
     }
 
-    &-title {
+    &__title {
       all: unset;
       font-size: 18px;
     }
 
-    &-duration {
+    &__duration {
       all: unset;
       font-size: 18px;
       color: #777;
     }
   }
 
-  &-locked {
+  &--locked {
     opacity: 0.2;
     cursor: not-allowed;
 
-    &-img {
+    &__img {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -106,8 +123,14 @@
     }
   }
 
-  &-active {
+  &--active {
     background-color: rgb(192, 213, 236);
+  }
+
+  &__underline {
+    width: 75%;
+
+    border-bottom: 1px solid black;
   }
 }
 
@@ -117,16 +140,16 @@
   gap: 10px;
   background-color: rgb(224, 224, 224);
   padding: 10px;
-  &-elem {
+  &__elem {
     display: flex;
     gap: 20px;
     align-items: center;
 
-    button {
+    &__btn {
       min-width: 75px;
     }
 
-    p {
+    &__text {
       all: unset;
     }
   }

@@ -1,0 +1,14 @@
+.basic-navbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  height: 70px;
+  padding-bottom: 15px !important;
+
+  &__link {
+    color: white;
+    text-decoration: none;
+  }
+}

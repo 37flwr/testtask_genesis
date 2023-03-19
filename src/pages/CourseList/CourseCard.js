@@ -14,7 +14,6 @@ const CourseCard = ({ data }) => {
   const navigate = useNavigate();
   const videoRef = useRef();
   const [isHovering, setIsHovering] = useState(false);
-  const [videoLoading, setVideoLoading] = useState(true);
 
   const handleMouseOver = () => {
     setIsHovering(true);
@@ -32,7 +31,7 @@ const CourseCard = ({ data }) => {
 
   return (
     <Card
-      className="fs-grid-elem"
+      className="fs-grid-elem courses-list__card"
       onMouseOver={() => handleMouseOver((currState) => !currState)}
       onMouseLeave={() => handleMouseOut((currState) => !currState)}
     >
@@ -41,7 +40,7 @@ const CourseCard = ({ data }) => {
           autoPlay
           controls={false}
           ref={videoRef}
-          style={{ height: "250px" }}
+          className="courses-list__card__video"
           muted
         ></video>
       ) : meta.courseVideoPreview?.previewImageLink ? (
@@ -55,41 +54,27 @@ const CourseCard = ({ data }) => {
             }
             type="image/webp"
           />
-          <img
-            style={{ height: "250px", width: "100%" }}
-            src={ImageNotFound}
-            alt=""
-          />
+          <img className="courses-list__card__img" src={ImageNotFound} alt="" />
         </picture>
       ) : (
-        <img
-          style={{ height: "250px", width: "100%" }}
-          src={ImageNotFound}
-          alt=""
-        />
+        <img className="courses-list__card__img" src={ImageNotFound} alt="" />
       )}
       <Card.Body className="d-grid gap-2">
         <Card.Title>{title}</Card.Title>
         <Card.Text>{description}</Card.Text>
-        <div className="course-card-details">
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+        <div className="courses-list__card__details">
+          <div className="courses-list__card__details--container">
             <StarRatings
               rating={rating}
               starDimension="20px"
               starSpacing="2px"
               starRatedColor="rgb(230, 67, 47)"
             />
-            <Badge style={{ marginTop: "10px" }} bg="info">
+            <Badge className="courses-list__card__details__badge" bg="info">
               {lessonsCount} lessons
             </Badge>
           </div>
-          <div className="three-col-grid">
+          <div className="courses-list__card__details__tags--container">
             {tags.map((tag) => (
               <Badge bg="light" text="dark" key={tag}>
                 {tag}
@@ -97,7 +82,7 @@ const CourseCard = ({ data }) => {
             ))}
           </div>
         </div>
-        <Button ovariant="primary" size="lg" onClick={() => navigate(id)}>
+        <Button variant="primary" size="lg" onClick={() => navigate(id)}>
           Details
         </Button>
       </Card.Body>

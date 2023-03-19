@@ -8,7 +8,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Toaster } from "react-hot-toast";
 
 import AppRoutes from "./routes/routeList";
-import NavBar from "./components/NavBar";
+import Navbar from "./components/Navbar";
 import ErrorFallback from "./components/fallbacks/ErrorFallback";
 import Loading from "./components/fallbacks/Loading";
 
@@ -28,8 +28,8 @@ function App() {
           }}
         >
           <BrowserRouter>
-            <NavBar />
             <ErrorBoundary FallbackComponent={ErrorFallback}>
+              <Navbar />
               <ContextProviders>
                 <Suspense fallback={<Loading />}>
                   <AppRoutes />

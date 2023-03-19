@@ -8,25 +8,24 @@ const BasicPagination = ({
   active,
 }) => {
   const pageNumbers = [];
-  const items = [];
 
   for (let i = 1; i <= Math.ceil(totalElements / elementsPerPage); i++) {
     pageNumbers.push(i);
   }
 
-  for (let number = 1; number <= pageNumbers.length; number++) {
-    items.push(
-      <Pagination.Item
-        onClick={() => paginate(number)}
-        key={number}
-        active={number == active}
-      >
-        {number}
-      </Pagination.Item>
-    );
-  }
-
-  return <Pagination>{items}</Pagination>;
+  return (
+    <Pagination>
+      {pageNumbers.map((number) => (
+        <Pagination.Item
+          onClick={() => paginate(number)}
+          key={number}
+          active={parseInt(number) === parseInt(active)}
+        >
+          {number}
+        </Pagination.Item>
+      ))}
+    </Pagination>
+  );
 };
 
 export default BasicPagination;

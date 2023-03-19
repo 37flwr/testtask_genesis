@@ -47,6 +47,7 @@ const Course = () => {
         })
       );
     }
+    // eslint-disable-next-line
   }, [courseDetails]);
 
   // Set video timing to be equal to stored value
@@ -90,6 +91,7 @@ const Course = () => {
         );
       }
     }
+    // eslint-disable-next-line
   }, [location]);
 
   // Handle hotkeys for playback speed
@@ -136,6 +138,7 @@ const Course = () => {
         })
       );
     };
+    // eslint-disable-next-line
   }, []);
 
   // Init hls and attach video to it
@@ -194,35 +197,29 @@ const Course = () => {
 
   return (
     <div className="course page-layout">
-      <div className="course-lessons">
+      <div className="course__lessons">
         {videoLinkPresent ? (
-          <div className="course-lessons-video">
-            {!openedInPip ? (
-              <>
-                <Button
-                  className="course-lessons-video-btn"
-                  onClick={() => moveToPip()}
-                >
-                  Open in pip
-                </Button>
-                <video
-                  controls
-                  ref={videoRef}
-                  className="course-lessons-video-elem"
-                ></video>
-              </>
-            ) : (
-              <video
-                controls
-                ref={videoRef}
-                className="course-lessons-video-elem"
-              ></video>
+          <div className="course__lessons__video">
+            {!openedInPip && (
+              <Button
+                className="course__lessons__video__btn"
+                onClick={() => moveToPip()}
+              >
+                Open in pip
+              </Button>
             )}
+            <video
+              controls
+              ref={videoRef}
+              className="course__lessons__video__elem"
+            ></video>
           </div>
         ) : (
-          <div className="not-found-video">Sorry... There is no such video</div>
+          <div className="course__lessons__video--not-found">
+            Sorry... There is no such video
+          </div>
         )}
-        <div className="course-lessons-list">
+        <div className="course__lessons__list">
           {courseDetails.lessons
             ?.sort((a, b) => a.order - b.order)
             .map((lesson, idx) => (
@@ -235,7 +232,7 @@ const Course = () => {
             ))}
         </div>
       </div>
-      <div className="course-details">{courseDetails.title}</div>
+      <div className="course__details">{courseDetails.title}</div>
       <PlaybackSpeed params={hotkeysParams} />
     </div>
   );

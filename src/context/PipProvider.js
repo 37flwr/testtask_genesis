@@ -1,10 +1,13 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { Button } from "react-bootstrap";
 import toast from "react-hot-toast";
 import Hls from "hls.js";
+
 import { coursesActions } from "../store/ducks/courses";
 import { hotkeysParams } from "../schemes/hotkeysParams";
-import { Button } from "react-bootstrap";
+
+import "./styles.scss";
 
 export const PipContext = createContext();
 
@@ -13,6 +16,7 @@ const PipProvider = ({ children }) => {
   const videoRef = useRef();
   const dispatch = useDispatch();
 
+  // Set new video once pip is called
   useEffect(() => {
     if (Hls.isSupported() && video) {
       var hls = new Hls();
@@ -45,6 +49,7 @@ const PipProvider = ({ children }) => {
     };
   }, []);
 
+  // Handle change of pip current video
   const updatePip = (newVideo) => {
     if (video && videoRef.current) {
       dispatch(
@@ -66,11 +71,11 @@ const PipProvider = ({ children }) => {
       {children}
       {video && (
         <div className="pip">
-          <div className="pip-container">
-            <Button className="pip-btn" onClick={() => updatePip(null)}>
+          <div className="pip--container">
+            <Button className="pip__btn" onClick={() => updatePip(null)}>
               x
             </Button>
-            <video className="pip-video" controls ref={videoRef}></video>
+            <video className="pip__video" controls ref={videoRef}></video>
           </div>
         </div>
       )}

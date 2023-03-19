@@ -1,10 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import useSwr from "swr";
-import BasicPagination from "../../components/Pagination";
 
+import BasicPagination from "../../components/BasicPagination";
 import CourseCard from "./CourseCard";
 
-const CourseList = () => {
+const CoursesList = () => {
   const { data: token } = useSwr({
     url: "https://api.wisey.app/api/v1/auth/anonymous?platform=subscriptions",
   });
@@ -32,8 +32,8 @@ const CourseList = () => {
   };
 
   return (
-    <div className="courses-page">
-      <section className="course-list-container">
+    <>
+      <section className="courses-list--container">
         {currentCourses?.map((course) => (
           <CourseCard key={course.id} data={course} />
         ))}
@@ -44,8 +44,8 @@ const CourseList = () => {
         paginate={paginate}
         active={currentPage}
       />
-    </div>
+    </>
   );
 };
 
-export default CourseList;
+export default CoursesList;

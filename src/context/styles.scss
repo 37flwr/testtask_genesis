@@ -1,0 +1,23 @@
+.pip {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+
+  &--container {
+    position: relative;
+    width: 200px;
+  }
+
+  &__btn {
+    position: absolute;
+    z-index: 101;
+    top: 0;
+    right: 0;
+  }
+
+  &__video {
+    position: relative;
+    width: 100%;
+  }
+}

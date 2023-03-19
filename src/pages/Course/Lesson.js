@@ -7,29 +7,34 @@ import { fancyTimeFormat } from "../../utils/formatters";
 const Lesson = ({ data, activeLesson, handleClick }) => {
   const { id, duration, previewImageLink, status, order, title } = data;
   return (
-    <div className="lesson">
+    <div
+      className={classnames(
+        "lesson",
+        activeLesson === id && "lesson--active",
+        status !== "unlocked" && "lesson--locked"
+      )}
+    >
       {status !== "unlocked" && (
-        <img className="lesson-locked-img" src={Locked} alt="lesson locked" />
+        <img className="lesson--locked__img" src={Locked} alt="lesson locked" />
       )}
       <div
         onClick={() => status === "unlocked" && handleClick(id)}
-        className={classnames(
-          "lesson-details",
-          activeLesson === id && "lesson-active",
-          status !== "unlocked" && "lesson-locked"
-        )}
+        className="lesson__details"
       >
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
           <img
-            className="lesson-details-img"
+            className="lesson__details__img"
             src={`${previewImageLink}/lesson-${order}.webp`}
             alt=""
           />
-          <h3 className="lesson-details-title">{title}</h3>
+          <h3 className="lesson__details__title">{title}</h3>
         </div>
-        <p className="lesson-details-duration">{fancyTimeFormat(duration)}</p>
+        <p className="lesson__details__duration">{fancyTimeFormat(duration)}</p>
       </div>
-      <div style={{ borderBottom: "1px solid black" }} />
+      <div
+        className="lesson__underline"
+        style={{ borderBottom: "1px solid black" }}
+      />
     </div>
   );
 };
