@@ -1,31 +1,27 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useSearchParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { coursesActions } from "../../store/ducks/courses";
 import useSwr from "swr";
-import Hls from "hls.js";
 import toast from "react-hot-toast";
+import Hls from "hls.js";
 
 import Lesson from "./Lesson";
 import PlaybackSpeed from "./PlaybackSpeed";
 
+import { hotkeysParams } from "../../schemes/hotkeysParams";
 import { usePip } from "../../hooks";
+import { coursesActions } from "../../store/ducks/courses";
+import { Button } from "react-bootstrap";
 
 const Course = () => {
-  const videoRef = useRef();
-  let lessonIdRef = useRef();
   const [activeLessonId, setActiveLessonId] = useState("");
   const [videoLinkPresent, setVideoLinkPresent] = useState(true);
+  const [openedInPip, setOpenedInPip] = useState(false);
+
+  const videoRef = useRef();
+  let lessonIdRef = useRef();
   const location = useLocation();
   const { updatePip } = usePip();
-
-  const hotkeysParams = [
-    { key: "1", action: "0.5" },
-    { key: "2", action: "0.75" },
-    { key: "3", action: "1" },
-    { key: "4", action: "1.5" },
-    { key: "5", action: "2" },
-  ];
 
   const { id } = useParams();
   let [searchParams, setSearchParams] = useSearchParams();
@@ -96,15 +92,62 @@ const Course = () => {
     }
   }, [location]);
 
-  // Init hls ref and attach it to video
+  // Handle hotkeys for playback speed
+  useEffect(() => {
+    const handlePlaybackChange = (event) => {
+      const newPlaybackSpeed = hotkeysParams.find(
+        (h) => h.key === event.key
+      )?.action;
+      if (newPlaybackSpeed) {
+        videoRef.current.playbackRate = newPlaybackSpeed;
+        toast.success(`Playback speed changed to ${newPlaybackSpeed}x`, {
+          duration: 2000,
+        });
+      }
+    };
+    window.addEventListener("keydown", handlePlaybackChange);
+
+    return () => {
+      window.removeEventListener("keydown", handlePlaybackChange);
+    };
+  }, []);
+
+  // Store current video timing on component unmount and move current video to pip
+  useEffect(() => {
+    let localVideoRef = null;
+    if (videoRef.current) localVideoRef = videoRef.current;
+
+    return () => {
+      if (!localVideoRef.paused) {
+        updatePip({
+          courseId: id,
+          lessonId: lessonIdRef.current,
+          timing: localVideoRef.currentTime,
+          link: courseDetails.lessons?.find((o) => o.id === lessonIdRef.current)
+            ?.link,
+          autoplay: true,
+        });
+      }
+      dispatch(
+        coursesActions.changeProgress({
+          courseId: id,
+          lessonId: lessonIdRef.current,
+          timing: localVideoRef.currentTime,
+        })
+      );
+    };
+  }, []);
+
+  // Init hls and attach video to it
   if (Hls.isSupported() && courseDetails.lessons && activeLessonId) {
     var hls = new Hls();
     const link = courseDetails.lessons?.find(
       (o) => o.id === activeLessonId
     )?.link;
-    if (link) {
+    if (link && videoRef.current.link !== link) {
       hls.loadSource(link);
       hls.attachMedia(videoRef.current);
+      videoRef.current.onplay = () => updatePip(null);
     } else {
       if (videoLinkPresent) {
         setVideoLinkPresent(false);
@@ -127,59 +170,55 @@ const Course = () => {
     setActiveLessonId(newLessonId);
   };
 
-  // Handle hotkeys for playback speed
-  useEffect(() => {
-    const handlePlaybackChange = (event) => {
-      const newPlaybackSpeed = hotkeysParams.find(
-        (h) => h.key === event.key
-      ).action;
-      videoRef.current.playbackRate = newPlaybackSpeed;
-      toast(`playback speed changed to ${newPlaybackSpeed}`, {
-        icon: "👏",
-        duration: 2000,
-      });
-    };
-    window.addEventListener("keydown", handlePlaybackChange);
-
-    return () => {
-      window.removeEventListener("keydown", handlePlaybackChange);
-    };
-  }, []);
-
-  // Store current video timing on component unmount
-  useEffect(() => {
-    updatePip(null);
-    let localVideoRef = null;
-    if (videoRef.current) localVideoRef = videoRef.current;
-
-    return () => {
-      updatePip({
-        courseId: id,
-        lessonId: lessonIdRef.current,
-        timing: localVideoRef.currentTime,
-        link: courseDetails.lessons?.find((o) => o.id === lessonIdRef.current)
-          ?.link,
-        autoplay: !localVideoRef.paused,
-      });
+  const moveToPip = () => {
+    if (videoRef.current) {
       dispatch(
         coursesActions.changeProgress({
           courseId: id,
-          lessonId: lessonIdRef.current,
-          timing: localVideoRef.currentTime,
+          lessonId: searchParams.get("lesson_id"),
+          timing: videoRef.current.currentTime,
         })
       );
-    };
-  }, []);
+    }
+    updatePip({
+      courseId: id,
+      lessonId: lessonIdRef.current,
+      timing: videoRef.current.currentTime,
+      link: courseDetails.lessons?.find((o) => o.id === lessonIdRef.current)
+        ?.link,
+      autoplay: !videoRef.current.paused,
+      handleOnClose: () => setOpenedInPip(false),
+    });
+    setOpenedInPip(true);
+  };
 
   return (
     <div className="course page-layout">
       <div className="course-lessons">
         {videoLinkPresent ? (
-          <video
-            controls
-            ref={videoRef}
-            className="course-lessons-video"
-          ></video>
+          <div className="course-lessons-video">
+            {!openedInPip ? (
+              <>
+                <Button
+                  className="course-lessons-video-btn"
+                  onClick={() => moveToPip()}
+                >
+                  Open in pip
+                </Button>
+                <video
+                  controls
+                  ref={videoRef}
+                  className="course-lessons-video-elem"
+                ></video>
+              </>
+            ) : (
+              <video
+                controls
+                ref={videoRef}
+                className="course-lessons-video-elem"
+              ></video>
+            )}
+          </div>
         ) : (
           <div className="not-found-video">Sorry... There is no such video</div>
         )}

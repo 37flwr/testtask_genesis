@@ -30,12 +30,12 @@ function App() {
           <BrowserRouter>
             <NavBar />
             <ErrorBoundary FallbackComponent={ErrorFallback}>
-              <Suspense fallback={<Loading />}>
-                <ContextProviders>
+              <ContextProviders>
+                <Suspense fallback={<Loading />}>
                   <AppRoutes />
-                  <Toaster />
-                </ContextProviders>
-              </Suspense>
+                </Suspense>
+                <Toaster />
+              </ContextProviders>
             </ErrorBoundary>
           </BrowserRouter>
         </SWRConfig>

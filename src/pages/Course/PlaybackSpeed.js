@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 
 const PlaybackSpeed = ({ params }) => {
   const handleClick = (key) => {
@@ -9,9 +10,9 @@ const PlaybackSpeed = ({ params }) => {
     <div className="playback-speed">
       {params.map((hParams) => (
         <div className="playback-speed-elem" key={hParams.key}>
-          <button onClick={() => handleClick(hParams.key)}>
+          <Button onClick={() => handleClick(hParams.key)}>
             Ctrl + {hParams.key}
-          </button>
+          </Button>
           <p>To set playback speed to {hParams.action}x</p>
         </div>
       ))}
