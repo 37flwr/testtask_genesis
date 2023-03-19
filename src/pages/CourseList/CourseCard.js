@@ -14,6 +14,7 @@ const CourseCard = ({ data }) => {
   const navigate = useNavigate();
   const videoRef = useRef();
   const [isHovering, setIsHovering] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(true);
 
   const handleMouseOver = () => {
     setIsHovering(true);

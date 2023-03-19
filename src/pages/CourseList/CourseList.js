@@ -33,7 +33,7 @@ const CourseList = () => {
 
   return (
     <div className="courses-page">
-      <section className="three-col-grid">
+      <section className="course-list-container">
         {currentCourses?.map((course) => (
           <CourseCard key={course.id} data={course} />
         ))}

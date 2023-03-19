@@ -5,6 +5,7 @@ import { SWRConfig } from "swr";
 import { Provider } from "react-redux";
 import store, { persistor } from "./store";
 import { PersistGate } from "redux-persist/integration/react";
+import { Toaster } from "react-hot-toast";
 
 import AppRoutes from "./routes/routeList";
 import NavBar from "./components/NavBar";
@@ -32,6 +33,8 @@ function App() {
               <Suspense fallback={<Loading />}>
                 {/* <ContextProviders> */}
                 <AppRoutes />
+                <Toaster />
+
                 {/* </ContextProviders> */}
               </Suspense>
             </ErrorBoundary>

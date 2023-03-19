@@ -11,13 +11,30 @@
     max-height: 70vh;
     align-items: flex-start;
 
+    @media (max-width: 1024px) {
+      flex-direction: column;
+    }
+
+    &-video {
+      height: auto;
+      width: 70%;
+
+      @media (max-width: 1024px) {
+        width: 100%;
+      }
+    }
+
     &-list {
       display: flex;
       flex-direction: column;
       min-height: 30vh;
       max-height: 70vh;
       overflow: scroll;
-      gap: 10px;
+
+      @media (max-width: 1024px) {
+        gap: 0px;
+        width: 100%;
+      }
 
       &::-webkit-scrollbar {
         -webkit-appearance: none;
@@ -49,9 +66,13 @@
     border-radius: 10px;
     padding: 10px;
 
+    &-img {
+      height: 40px;
+    }
+
     &-title {
       all: unset;
-      font-size: 20px;
+      font-size: 18px;
     }
 
     &-duration {
@@ -76,5 +97,26 @@
 
   &-active {
     background-color: rgb(192, 213, 236);
+  }
+}
+
+.playback-speed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: rgb(224, 224, 224);
+  padding: 10px;
+  &-elem {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    button {
+      min-width: 75px;
+    }
+
+    p {
+      all: unset;
+    }
   }
 }

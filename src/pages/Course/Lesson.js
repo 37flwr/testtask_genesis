@@ -5,7 +5,7 @@ import "./styles.scss";
 import { fancyTimeFormat } from "../../utils/formatters";
 
 const Lesson = ({ data, activeLesson, handleClick }) => {
-  const { id, duration, link, previewImageLink, status, order, title } = data;
+  const { id, duration, previewImageLink, status, order, title } = data;
   return (
     <div className="lesson">
       {status !== "unlocked" && (
@@ -19,7 +19,14 @@ const Lesson = ({ data, activeLesson, handleClick }) => {
           status !== "unlocked" && "lesson-locked"
         )}
       >
-        <h3 className="lesson-details-title">{title}</h3>
+        <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          <img
+            className="lesson-details-img"
+            src={`${previewImageLink}/lesson-${order}.webp`}
+            alt=""
+          />
+          <h3 className="lesson-details-title">{title}</h3>
+        </div>
         <p className="lesson-details-duration">{fancyTimeFormat(duration)}</p>
       </div>
       <div style={{ borderBottom: "1px solid black" }} />

@@ -1,17 +1,13 @@
 import { useEffect, useState, useRef } from "react";
-import {
-  unstable_HistoryRouter,
-  useParams,
-  useSearchParams,
-  createBrowserHistory,
-  useLocation,
-} from "react-router-dom";
+import { useParams, useSearchParams, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { coursesActions } from "../../store/ducks/courses";
 import useSwr from "swr";
 import Hls from "hls.js";
+import toast from "react-hot-toast";
 
 import Lesson from "./Lesson";
+import PlaybackSpeed from "./PlaybackSpeed";
 // import { PipContext } from "../../context/PipProvider";
 
 const Course = () => {
@@ -20,6 +16,14 @@ const Course = () => {
   const [activeLessonId, setActiveLessonId] = useState("");
   const [videoLinkPresent, setVideoLinkPresent] = useState(true);
   const location = useLocation();
+
+  const hotkeysParams = [
+    { key: "1", action: "0.5" },
+    { key: "2", action: "0.75" },
+    { key: "3", action: "1" },
+    { key: "4", action: "1.5" },
+    { key: "5", action: "2" },
+  ];
 
   const { id } = useParams();
   let [searchParams, setSearchParams] = useSearchParams();
@@ -99,9 +103,6 @@ const Course = () => {
     if (link) {
       hls.loadSource(link);
       hls.attachMedia(videoRef.current);
-      // videoRef.current.ontimeupdate = ({ target }) => {
-      //   timeRef.current = target.currentTime;
-      // };
     } else {
       if (videoLinkPresent) {
         setVideoLinkPresent(false);
@@ -111,13 +112,15 @@ const Course = () => {
 
   // Handle change lesson
   const handleChangeLesson = (newLessonId) => {
-    dispatch(
-      coursesActions.changeProgress({
-        courseId: id,
-        lessonId: searchParams.get("lesson_id"),
-        timing: videoRef.current.currentTime,
-      })
-    );
+    if (videoRef.current) {
+      dispatch(
+        coursesActions.changeProgress({
+          courseId: id,
+          lessonId: searchParams.get("lesson_id"),
+          timing: videoRef.current.currentTime,
+        })
+      );
+    }
     setSearchParams(`lesson_id=${newLessonId}`);
     setActiveLessonId(newLessonId);
   };
@@ -125,17 +128,14 @@ const Course = () => {
   // Handle hotkeys for playback speed
   useEffect(() => {
     const handlePlaybackChange = (event) => {
-      if (event.key === "1" && event.ctrlKey) {
-        videoRef.current.playbackRate = 1;
-      } else if (event.key === "2" && event.ctrlKey) {
-        videoRef.current.playbackRate = 1.5;
-      } else if (event.key === "3" && event.ctrlKey) {
-        videoRef.current.playbackRate = 2;
-      } else if (event.key === "4" && event.ctrlKey) {
-        videoRef.current.playbackRate = 0.75;
-      } else if (event.key === "5" && event.ctrlKey) {
-        videoRef.current.playbackRate = 0.5;
-      }
+      const newPlaybackSpeed = hotkeysParams.find(
+        (h) => h.key === event.key
+      ).action;
+      videoRef.current.playbackRate = newPlaybackSpeed;
+      toast(`playback speed changed to ${newPlaybackSpeed}`, {
+        icon: "👏",
+        duration: 2000,
+      });
     };
     window.addEventListener("keydown", handlePlaybackChange);
 
@@ -167,19 +167,18 @@ const Course = () => {
           <video
             controls
             ref={videoRef}
-            style={{ height: "auto", width: "70%" }}
+            className="course-lessons-video"
           ></video>
         ) : (
-          <div className="not-found-video" style={{ width: "70%" }}>
-            Sorry... There is no such video
-          </div>
+          <div className="not-found-video">Sorry... There is no such video</div>
         )}
         <div className="course-lessons-list">
           {courseDetails.lessons
             ?.sort((a, b) => a.order - b.order)
-            .map((lesson) => (
+            .map((lesson, idx) => (
               <Lesson
                 data={lesson}
+                key={idx}
                 activeLesson={activeLessonId}
                 handleClick={handleChangeLesson}
               />
@@ -187,6 +186,7 @@ const Course = () => {
         </div>
       </div>
       <div className="course-details">{courseDetails.title}</div>
+      <PlaybackSpeed params={hotkeysParams} />
     </div>
   );
 };

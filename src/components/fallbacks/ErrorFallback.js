@@ -6,7 +6,9 @@ const ErrorFallback = ({ error, resetErrorBoundary }) => {
   console.log(error.response);
   return (
     <div className="full-page content-center flex-column">
-      <p className="">An error occured: {error.response}</p>
+      <p className="">
+        An error occured. {error.response ? error.response : "Try again later"}
+      </p>
       <div className="flex-row std-gap">
         <Button variant="outline-info" onClick={() => resetErrorBoundary()}>
           <Link to="/">Home page</Link>

@@ -1,8 +1,14 @@
-.three-col-grid {
+.course-list-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-row-gap: 20px;
   grid-column-gap: 40px;
+
+  @media (max-width: 1024px) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 }
 
 .page-layout {
@@ -41,6 +47,11 @@
   align-items: center;
   min-height: 30vh;
   max-height: 70vh;
+  width: 70%;
+
+  @media (max-width: 1024px) {
+    width: 100%;
+  }
 }
 
 .pip {
