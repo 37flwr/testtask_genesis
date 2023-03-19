@@ -8,7 +8,8 @@ import toast from "react-hot-toast";
 
 import Lesson from "./Lesson";
 import PlaybackSpeed from "./PlaybackSpeed";
-// import { PipContext } from "../../context/PipProvider";
+
+import { usePip } from "../../hooks";
 
 const Course = () => {
   const videoRef = useRef();
@@ -16,6 +17,7 @@ const Course = () => {
   const [activeLessonId, setActiveLessonId] = useState("");
   const [videoLinkPresent, setVideoLinkPresent] = useState(true);
   const location = useLocation();
+  const { updatePip } = usePip();
 
   const hotkeysParams = [
     { key: "1", action: "0.5" },
@@ -146,10 +148,19 @@ const Course = () => {
 
   // Store current video timing on component unmount
   useEffect(() => {
+    updatePip(null);
     let localVideoRef = null;
     if (videoRef.current) localVideoRef = videoRef.current;
 
     return () => {
+      updatePip({
+        courseId: id,
+        lessonId: lessonIdRef.current,
+        timing: localVideoRef.currentTime,
+        link: courseDetails.lessons?.find((o) => o.id === lessonIdRef.current)
+          ?.link,
+        autoplay: !localVideoRef.paused,
+      });
       dispatch(
         coursesActions.changeProgress({
           courseId: id,

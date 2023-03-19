@@ -31,11 +31,10 @@ function App() {
             <NavBar />
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Suspense fallback={<Loading />}>
-                {/* <ContextProviders> */}
-                <AppRoutes />
-                <Toaster />
-
-                {/* </ContextProviders> */}
+                <ContextProviders>
+                  <AppRoutes />
+                  <Toaster />
+                </ContextProviders>
               </Suspense>
             </ErrorBoundary>
           </BrowserRouter>

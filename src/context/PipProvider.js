@@ -1,41 +1,54 @@
 import { createContext, useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import Hls from "hls.js";
+import { coursesActions } from "../store/ducks/courses";
 
 export const PipContext = createContext();
 
 const PipProvider = ({ children }) => {
-  const [videoParams, setVideoParams] = useState(null);
-  //   const videoRef = useRef();
+  const [video, setVideo] = useState(null);
+  const videoRef = useRef();
+  const dispatch = useDispatch();
 
-  //   if (Hls.isSupported() && videoParams) {
-  //     var hls = new Hls();
-  //     hls.loadSource(videoParams.link);
-  //     hls.attachMedia(videoRef.current);
-  //   }
+  useEffect(() => {
+    if (Hls.isSupported() && video) {
+      var hls = new Hls();
+      hls.loadSource(video.link);
+      hls.attachMedia(videoRef.current);
+      if (video.autoplay) {
+        videoRef.current.play();
+      }
+      if (video.timing) {
+        videoRef.current.currentTime = video.timing;
+      }
+    }
+  }, [video]);
 
-  //   useEffect(() => {
-  //     if (videoRef.current && videoParams?.timing) {
-  //       videoRef.current.currentTime = videoParams.timing;
-  //       if (videoParams.autoplay) {
-  //         console.log(videoParams.autoplay);
-  //         videoRef.current.play();
-  //       }
-  //     }
-  //   }, [videoParams]);
+  const updatePip = (newLink) => {
+    if (video) {
+      dispatch(
+        coursesActions.changeProgress({
+          courseId: video.courseId,
+          lessonId: video.lessonId,
+          timing: videoRef.current.currentTime,
+        })
+      );
+    }
+    if (newLink?.link) {
+      setVideo(newLink);
+    } else {
+      setVideo(null);
+    }
+  };
 
   return (
-    <PipContext.Provider value={{ setVideoParams }}>
+    <PipContext.Provider value={{ updatePip }}>
       {children}
-      {/* {videoParams && (
+      {video && (
         <div className="pip">
-          <video
-            autoplay
-            style={{ width: "200px" }}
-            controls
-            ref={videoRef}
-          ></video>
+          <video style={{ width: "200px" }} controls ref={videoRef}></video>
         </div>
-      )} */}
+      )}
     </PipContext.Provider>
   );
 };
