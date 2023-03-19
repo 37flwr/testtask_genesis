@@ -11,7 +11,10 @@ const NavBar = () => {
     >
       <Nav.Item>
         <Nav.Link eventKey="/courses">
-          <Link style={{ color: "white" }} to="/courses?page=1">
+          <Link
+            style={{ color: "white", textDecoration: "none" }}
+            to="/courses?page=1"
+          >
             Courses
           </Link>
         </Nav.Link>

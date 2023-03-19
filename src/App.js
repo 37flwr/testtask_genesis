@@ -28,11 +28,7 @@ function App() {
         >
           <BrowserRouter>
             <NavBar />
-            <ErrorBoundary
-              FallbackComponent={() => (
-                <ErrorFallback text="Oops! Looks like such page does not exist..." />
-              )}
-            >
+            <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Suspense fallback={<Loading />}>
                 {/* <ContextProviders> */}
                 <AppRoutes />

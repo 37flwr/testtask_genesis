@@ -19,6 +19,7 @@ const Course = () => {
   let lessonIdRef = useRef();
   const [activeLessonId, setActiveLessonId] = useState("");
   const [videoLinkPresent, setVideoLinkPresent] = useState(true);
+  const location = useLocation();
 
   const { id } = useParams();
   let [searchParams, setSearchParams] = useSearchParams();
@@ -26,13 +27,11 @@ const Course = () => {
   const dispatch = useDispatch();
   const { courses } = useSelector((state) => state.Courses);
 
-  const { data: token, error: tokenError } = useSwr({
+  const { data: token } = useSwr({
     url: "https://api.wisey.app/api/v1/auth/anonymous?platform=subscriptions",
-    handleGracefully: true,
   });
-  const { data: courseDetails, error: coursesError } = useSwr(() => ({
+  const { data: courseDetails } = useSwr(() => ({
     url: `https://api.wisey.app/api/v1/core/preview-courses/${id}`,
-    handleGracefully: true,
     params: [["token", token.token]],
   }));
 
@@ -60,18 +59,36 @@ const Course = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeLessonId]);
 
-  // Add lesson id to search params if there is no stored one
+  // Add lesson id to search params if there is no stored one and store new one in redux store
   useEffect(() => {
     let currentCourse = courses?.find((c) => c.courseId === id);
-    if (currentCourse)
-      if (!searchParams.get("lesson_id")) {
+    if (!searchParams.get("lesson_id")) {
+      if (currentCourse) {
         setSearchParams(`lesson_id=${currentCourse.activeLessonId}`);
         setActiveLessonId(currentCourse.activeLessonId);
       } else {
-        setActiveLessonId(searchParams.get("lesson_id"));
-        lessonIdRef.current = searchParams.get("lesson_id");
+        dispatch(
+          coursesActions.changeActiveLesson({
+            courseId: id,
+            activeLessonId: courseDetails.lessons[0].id,
+          })
+        );
+        setSearchParams(`lesson_id=${courseDetails.lessons[0].id}`);
+        setActiveLessonId(courseDetails.lessons[0].id);
       }
-  }, [courseDetails, courses]);
+    } else {
+      setActiveLessonId(searchParams.get("lesson_id"));
+      lessonIdRef.current = searchParams.get("lesson_id");
+      if (currentCourse.activeLessonId !== searchParams.get("lesson_id")) {
+        dispatch(
+          coursesActions.changeActiveLesson({
+            courseId: id,
+            activeLessonId: searchParams.get("lesson_id"),
+          })
+        );
+      }
+    }
+  }, [location]);
 
   // Init hls ref and attach it to video
   if (Hls.isSupported() && courseDetails.lessons && activeLessonId) {
@@ -94,12 +111,6 @@ const Course = () => {
 
   // Handle change lesson
   const handleChangeLesson = (newLessonId) => {
-    dispatch(
-      coursesActions.changeActiveLesson({
-        courseId: id,
-        activeLessonId: newLessonId,
-      })
-    );
     dispatch(
       coursesActions.changeProgress({
         courseId: id,

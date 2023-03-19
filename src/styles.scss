@@ -20,6 +20,14 @@
   align-items: center;
 }
 
+.flex-row {
+  display: flex;
+}
+
+.std-gap {
+  gap: 20px;
+}
+
 .flex-column {
   display: flex;
   flex-direction: column;
