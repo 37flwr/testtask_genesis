@@ -18,14 +18,14 @@
 ## Run your application
 
 1. Open a terminal
-2. `cd client`
+2. `cd {project location}`
 3. `npm install` or `yarn install`
 4. `npm run start` or `yarn start`
 
 ## Application logic
 
-Застосунок написаний на _JS, React, Redux Saga_
-Для запитів використовується бібліотека _axios_ та _swr_
-Для обробки помилок використовується _react-error-boundary_
-Для відображення завантаження даних використовується _Suspense_, який взаємодіє з бібліотекою _swr_
-Для спливаючих повідомлень використовується _react-hot-toast_
+*Застосунок написаний на *JS, React, Redux Saga*
+*Для запитів використовується бібліотека _axios_ та _swr_
+*Для обробки помилок використовується *react-error-boundary*
+*Для відображення завантаження даних використовується _Suspense_, який взаємодіє з бібліотекою _swr_
+\*Для спливаючих повідомлень використовується _react-hot-toast_
